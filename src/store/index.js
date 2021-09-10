@@ -1,10 +1,14 @@
 import { configureStore } from "@reduxjs/toolkit"
 import setIsAuthReducer from "./isAuthSlice"
-import userDataSlice from "./userDataSlice"
+import userSlice from "./userSlice"
+import dataSlice from "./dataSlice"
+import isEmailActivatedSlice from "./IsEmailActivatedSlice"
 
 export default configureStore({
     reducer: {
         isAuth: setIsAuthReducer,
-        user: userDataSlice,
+        user: userSlice,
+        data: dataSlice,
+        isEmailActivated: isEmailActivatedSlice,
     },
 })
