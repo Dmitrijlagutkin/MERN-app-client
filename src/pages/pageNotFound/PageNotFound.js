@@ -1,6 +1,6 @@
 import { useHistory } from 'react-router'
 import { makeStyles } from '@material-ui/core/styles';
-import Button from '../components/Button'
+import Button from '../../components/Button'
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -16,7 +16,7 @@ const PageNotFound = () => {
     return (
         <div className={classes.root}>
             <h2>Page not found</h2>
-            <Button buttonText="back to main page" 
+            <Button buttonText="back to home page" 
             onClickButton={onClickBack} 
             color="primary" 
             variant="contained"/>

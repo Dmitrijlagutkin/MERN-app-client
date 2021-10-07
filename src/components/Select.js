@@ -34,7 +34,7 @@ const SimpleSelect = ({categoryList, onChange, selectedCategory, onClickAddCateg
           onChange={onChange}
         > 
         {categoryList?.map((category) => { 
-            if(!!category) return <MenuItem value={category}>{category}</MenuItem>
+            if(!!category) return <MenuItem key={category} value={category}>{category}</MenuItem>
         })}
           <MenuItem className={classes.selectOptionAdd} value={10} onClick={onClickAddCategory}>
                 add category

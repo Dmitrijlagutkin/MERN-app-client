@@ -8,11 +8,6 @@ const useStyles = makeStyles((theme) => ({
       margin: 0,
     },
   }
-    // myButton: {
-    //   margin: "0",
-    //   padding: "0"
-    // }
-  // },
 }));
 
 const ContainedButtons = ({color, isDisabled, variant, buttonText, onClickButton}) => {
@@ -20,7 +15,6 @@ const ContainedButtons = ({color, isDisabled, variant, buttonText, onClickButton
 
   return (
     <div className={classes.root}>
-     
       <Button variant={variant} 
         color={color} 
         disabled={isDisabled} 

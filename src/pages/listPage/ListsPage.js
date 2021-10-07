@@ -1,11 +1,10 @@
-import {useState, useEffect} from "react"
+import {useState} from "react"
 import {useSelector, useDispatch} from "react-redux"
 import {useHistory} from "react-router-dom"
 import { makeStyles } from '@material-ui/styles';
 import Button from "../../components/Button";
 import {routeNames} from "../../constants/routeNames"
-import RecipeReviewCard from "../../components/ListCard"
-import Input from "../../components/Input"
+import ListCard from "./ListCard"
 import LibraryAddIcon from '@material-ui/icons/LibraryAdd';
 import Tooltip from "../../components/Tooltip"
 
@@ -66,9 +65,7 @@ const ListsPage = () => {
                 :
                 <div>
                     <div className={classes.topTitle}>
-                        <Input label="Search"
-                            onChangeInput = {(e) => onChangeSearchText(e)}
-                        />
+                        <span/>
                         <h4>Your lists</h4>
                         <div className={classes.titleWrapper}>
                             <Button buttonText="Create new list"
@@ -80,10 +77,10 @@ const ListsPage = () => {
                     </div>
                     
                     <div className={classes.listWrapper}>
-                        {lists?.map((list) => {
+                        {lists?.map((list, index) => {
                             return (
                                 <div className={classes.listItem} key={list._id}>
-                                    <RecipeReviewCard listData={list} />
+                                    <ListCard listData={list}/>
                                 </div>
                             )
                         })}

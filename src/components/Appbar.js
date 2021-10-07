@@ -80,8 +80,7 @@ const ButtonAppBar = ({ onClickOpenMenu }) => {
                                 <Input label="Search"
                                     onChangeInput = {(e) => onChangeSearchText(e)}
                                     className={classes.InputSearch}
-                                    
-                                    
+                                    isLiteInput={true}
                                 />
                                 <Button className={classes.button} color='inherit' buttonText="Logout" onClickButton={onClickLogout}/>
                             </div>

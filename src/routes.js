@@ -1,7 +1,7 @@
-import PageNotFound from "./pages/PageNotFound"
+import PageNotFound from "./pages/pageNotFound/PageNotFound"
 import ListsPage from "./pages/listPage/ListsPage"
 import LoginPage from "./pages/authPage/LoginPage"
-import CreateListPage from "./pages/listPage/CreateListPage"
+import CreateListPage from "./pages/createListPage/CreateListPage"
 import { routeNames } from "./constants/routeNames"
 
 const routes = [

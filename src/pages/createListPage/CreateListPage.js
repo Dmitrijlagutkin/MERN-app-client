@@ -13,6 +13,9 @@ import CreateIcon from '@material-ui/icons/Create';
 import {useDate} from "../../hooks/useDate"
 import { routeNames } from "../../constants/routeNames";
 import Select from "../../components/Select"
+import ListItem from "./CreateListItem"
+import {setTempListItem} from "../../store/listsSlice"
+import CheckBox from "../../components/CheckBox"
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -43,7 +46,28 @@ const useStyles = makeStyles((theme) => ({
     createListButton: {
         display: "inline-block",
         marginTop: "25px"
-    }
+    },
+    itemsList: {
+        marginBottom: "30px"
+    },
+    listItemsWrapper: {
+        maxWidth: "50%",
+        margin: "0 auto",
+        display: "grid",
+        gridTemplateColumns: "0.5fr 8fr 0.5fr",
+        alignItems: "center",
+        borderBottom: "1px solid grey"
+    },
+    itemName: {
+        textAlign: "start",
+        fontSize: "18px",
+        margin: "10px"
+    },
+    itemNumber: {
+        textAlign: "start",
+        fontSize: "18px",
+        margin: "10px 0"
+    },
 }));
 
 const CreateListPage = () => {
@@ -53,25 +77,33 @@ const CreateListPage = () => {
     const date = useDate()
     const {user} = useSelector((state) => state?.user)
     const {lists} = useSelector((state) => state?.lists)
+    const {tempListItem} = useSelector((state) => state?.lists)
     const [selectedCategory, setSelectedCategory] = useState('')
     const [category, setCategory] = useState(null || selectedCategory)
     const [listTitle, setListTitle] = useState('')
     const [isConfirmTitle, setIsConfirmTitle] = useState(false)
     const [isConfirmCategory, setIsConfirmCategory] = useState(false)
     const [isAddCategory, setIsAddCategory] = useState(false)
-
+    const [isOpenListItem, setIsOpenListItem] = useState(false)
+    const [isFavorite, setIsFavorite] = useState(false);
+    
+    console.log("isFavorite", isFavorite)
+    
     useEffect(() => {
         setCategory(selectedCategory)
     }, [selectedCategory])
-
-    console.log("category", category)
 
     const onChangeListTitle = (e) => setListTitle(e.target.value)
     const onChangeCategory = (e) => setCategory(e.target.value)
     const onChangeSelectedCategory = (e) => setSelectedCategory(e.target.value) 
     const onClickAddNewList = () => {
         if(isConfirmTitle) {
-            dispatch(addNewList({listTitle, date, category: category, userId: user?.user?.id}))
+            dispatch(addNewList({listTitle, 
+                date, 
+                category: category, 
+                listItem: tempListItem, 
+                isFavorites: isFavorite,
+                userId: user?.user?.id}))
             history.push(routeNames.ROUTE_MAIN)
         }
     }
@@ -86,6 +118,8 @@ const CreateListPage = () => {
 
     const onClickAddCategory = () => setIsAddCategory(!isAddCategory)
 
+    const onClickIsFavoriteHandler = () => setIsFavorite(!isFavorite)
+
     const getCategoryList = (targetCategory) => {
         const categoryList = targetCategory?.map((list) => {
             return list.category
@@ -97,6 +131,13 @@ const CreateListPage = () => {
     }
 
     const categoryList = getCategoryList(lists)
+
+    const openListItemHandler = () => setIsOpenListItem(true)
+    const onClickConfirmItem = (itemName) => {
+        setIsOpenListItem(false)
+        dispatch(setTempListItem({itemName: itemName}))
+    }
+    
 
     return (
         <div className={classes.root}>
@@ -171,13 +212,26 @@ const CreateListPage = () => {
                 }   
                 </>
             }
-            
+            <CheckBox onClickCheckBox={onClickIsFavoriteHandler}/>
+            <div className={classes.itemsList}>
+                {!!tempListItem?.length && tempListItem?.map((listItem, index) => {
+                    return (
+                        <div className={classes.listItemsWrapper}>
+                            <span className={classes.itemNumber}>{index + 1}.</span>
+                            <span className={classes.itemName}>{listItem.itemName}</span>
+                            <CreateIcon color="primary" 
+                            style={{cursor: "pointer"}}
+                            size="small"/>
+                        </div>)
+                })}
+            </div>
+            {isOpenListItem && <ListItem onClickConfirmItem={onClickConfirmItem}/>}
             
             <div>
                 <Tooltip title="Add item"
                     placement="bottom"
                     arrow={true}>
-                    <AddCircleOutlineIcon color="primary"/>
+                    <AddCircleOutlineIcon color="primary" onClick={openListItemHandler}/>
                 </Tooltip>
             </div>
             <Tooltip title={!isConfirmTitle ? "Enter list title" : "Create"}

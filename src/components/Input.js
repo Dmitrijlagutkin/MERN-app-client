@@ -9,6 +9,12 @@ const useStyles = makeStyles((theme) => ({
       margin: theme.spacing(1),
       width: '25ch',
     },
+  },
+  rootLight: {
+    '& > *': {
+      margin: theme.spacing(1),
+      width: '25ch',
+    },
 
     "& .MuiFormLabel-root": {
       color: "#fff",
@@ -44,12 +50,13 @@ const BasicTextFields = ({label,
     type,
     required,
     errorInput,
-    defaultValue
+    defaultValue,
+    isLiteInput
 }) => {
   const classes = useStyles();
 
   return (
-    <form className={classes.root} noValidate autoComplete="off">
+    <form className={isLiteInput ? classes.rootLight : classes.root} noValidate autoComplete="off">
       <TextField size="small"
         variant="outlined" 
         type={type}

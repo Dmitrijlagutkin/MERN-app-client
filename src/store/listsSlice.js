@@ -20,10 +20,25 @@ import { setIsActivated } from "./IsEmailActivatedSlice"
 export const addNewList = createAsyncThunk(
     "lists/addList",
     async (payload, { dispatch }) => {
-        console.log("in slice", payload.listTitle, payload.date, payload.category, payload.userId)
+        console.log("in slice", 
+        payload.listTitle, 
+        payload.date, 
+        payload.category, 
+        payload.listItem, 
+        payload.isFavorites, 
+        payload.userId)
         try {
-            const {listTitle, date, category, userId}= payload
-            const response = await addList(listTitle, date, category)
+            const {listTitle, 
+                date, 
+                category, 
+                listItem, 
+                isFavorites, 
+                userId}= payload
+            const response = await addList(listTitle, 
+                date, 
+                category, 
+                listItem, 
+                isFavorites)
             console.log(response.data)
             dispatch(getUserData(userId))
             return response.data
@@ -38,11 +53,15 @@ export const addNewList = createAsyncThunk(
 const listsSlice = createSlice({
     name: "lists",
     initialState: {
-        lists: null
+        lists: null,
+        tempListItem: []
     },
     reducers: {
         setLists(state, action) {
             state.lists = action.payload
+        },
+        setTempListItem(state, action) {
+            state.tempListItem.push(action.payload)
         }
     },
     extraReducers: {
@@ -77,6 +96,6 @@ const listsSlice = createSlice({
     },
 })
 
-export const { setLists } = listsSlice.actions
+export const { setLists, setTempListItem } = listsSlice.actions
 
 export default listsSlice.reducer
