@@ -1,31 +1,73 @@
-import React from "react"
+import React, {useState} from "react"
+import { useDispatch, useSelector } from "react-redux"
+import {useHistory} from "react-router-dom"
 import { makeStyles } from "@material-ui/core/styles"
-import AppBar from "@material-ui/core/AppBar"
-import Toolbar from "@material-ui/core/Toolbar"
-import Typography from "@material-ui/core/Typography"
-import Button from "@material-ui/core/Button"
+import Button from "./Button"
 import IconButton from "@material-ui/core/IconButton"
 import MenuIcon from "@material-ui/icons/Menu"
+import {logoutApi} from "../store/isAuthSlice"
+import {routeNames} from "../constants/routeNames"
+import Loader from "./Loader"
+import Input from "./Input"
 
 const useStyles = makeStyles((theme) => ({
     root: {
-        flexGrow: 1,
+        // flexGrow: 1,
+        maxWidth: "100vw",
+        backgroundColor: "#3f51b5",
+        color: "#fff",
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "center",
+    },
+    appBar: {
+        alignItems: "center",
+        width: "100vw",
     },
     menuButton: {
-        marginRight: theme.spacing(2),
+        marginLeft: "5px",
+        display: "flex",
+        justifyContent: "space-between",
     },
     title: {
         flexGrow: 1,
     },
+    button: {
+        margin: "0 0"
+    },
+    buttonWrapper: {
+        marginRight: "5px",
+        textAlign: "end",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "space-between",
+    },
+    InputSearch: {
+        color: "#fff"
+    }
 }))
 
-export default function ButtonAppBar({ onClickOpenMenu }) {
+const ButtonAppBar = ({ onClickOpenMenu }) => {
     const classes = useStyles()
+    const dispatch = useDispatch()
+    const history = useHistory()
+    const { isAuth } = useSelector((state) => state.isAuth)
+    const { isLoading } = useSelector((state) => state.isAuth)
+    const [searchText, setSearchText] = useState('')
+
+    const onClickLogout = () => {
+        history.push(routeNames.ROUTE_MAIN)
+        dispatch(logoutApi())
+    }
+    const onClictToLoginPage = () => history.push(routeNames.ROUTE_LOGIN)
+    const onChangeSearchText = (e) => setSearchText(e.target.value)
 
     return (
-        <div className={classes.root}>
-            <AppBar position='static'>
-                <Toolbar>
+        <>
+            {isLoading ?
+                <div><Loader isLoading={isLoading}/></div>
+                :
+                <div className={classes.root}>
                     <IconButton
                         edge='start'
                         className={classes.menuButton}
@@ -33,12 +75,30 @@ export default function ButtonAppBar({ onClickOpenMenu }) {
                         aria-label='menu'>
                         <MenuIcon onClick={onClickOpenMenu} />
                     </IconButton>
-                    <Typography variant='h6' className={classes.title}>
-                        News
-                    </Typography>
-                    <Button color='inherit'>Login</Button>
-                </Toolbar>
-            </AppBar>
-        </div>
+                    {isAuth ? 
+                            <div className={classes.buttonWrapper}>
+                                <Input label="Search"
+                                    onChangeInput = {(e) => onChangeSearchText(e)}
+                                    className={classes.InputSearch}
+                                    
+                                    
+                                />
+                                <Button className={classes.button} color='inherit' buttonText="Logout" onClickButton={onClickLogout}/>
+                            </div>
+                            :
+                            <div className={classes.buttonWrapper}>
+                                <Button className={classes.button} 
+                                    color='inherit' 
+                                    buttonText="Sign in"
+                                    onClickButton={onClictToLoginPage}
+                                    />
+                                <Button color='inherit' buttonText="Registration"/>
+                            </div>
+                    }
+                </div>
+            }
+        </>
     )
 }
+
+export default ButtonAppBar

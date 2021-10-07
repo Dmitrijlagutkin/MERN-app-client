@@ -1,7 +1,6 @@
 import React, { useState } from "react"
 import { makeStyles } from "@material-ui/core/styles"
 import SwipeableDrawer from "@material-ui/core/SwipeableDrawer"
-import Button from "@material-ui/core/Button"
 import List from "@material-ui/core/List"
 import Divider from "@material-ui/core/Divider"
 import ListItemText from "@material-ui/core/ListItemText"
@@ -21,7 +20,6 @@ const useStyles = makeStyles({
         textAlign: "end",
         padding: "15px 15px 15px 0",
         cursor: "pointer",
-        // display: "inline-block",
     },
 })
 

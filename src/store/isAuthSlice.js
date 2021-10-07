@@ -2,7 +2,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit"
 import axios from "axios"
 import { setUser } from "./userSlice"
 import { login, registration, logout } from "../services/authService"
-import { setData } from "./dataSlice"
+import { setData, getUserData } from "./dataSlice"
 import { setIsActivated } from "./IsEmailActivatedSlice"
 import { API_URL } from "../http"
 
@@ -14,8 +14,12 @@ export const loginApi = createAsyncThunk(
             const response = await login(email, password)
             localStorage.setItem("token", response.data.accessToken)
             dispatch(setUser(response.data))
+            dispatch(setIsAuth(true))
+            dispatch(setErrorMessage(null))
             return response.data
         } catch (e) {
+            dispatch(setErrorMessage(e.response?.data?.message))
+            dispatch(setIsAuth(false))
             console.log(e.response?.data?.message)
         }
     }
@@ -29,8 +33,10 @@ export const registrationApi = createAsyncThunk(
             const response = await registration(email, password)
             localStorage.setItem("token", response.data.accessToken)
             dispatch(setUser(response.data))
+            dispatch(setIsAuth(true))
             return response.data
         } catch (e) {
+            // dispatch(setIsAuth(false))
             console.log(e.response?.data?.message)
         }
     }
@@ -44,7 +50,7 @@ export const logoutApi = createAsyncThunk(
             localStorage.removeItem("token")
             console.log("logout", response)
             dispatch(setUser(null))
-            dispatch(setData(null))
+            
             dispatch(setIsActivated(null))
             return response.data
         } catch (e) {
@@ -62,7 +68,7 @@ export const checkAuth = createAsyncThunk(
             })
             localStorage.setItem("token", response.data.accessToken)
             dispatch(setUser(response.data))
-            console.log("res", response)
+            dispatch(getUserData(response.data.user.id))
             dispatch(setIsAuth(true))
             return response.data
         } catch (e) {
@@ -74,7 +80,11 @@ export const checkAuth = createAsyncThunk(
 
 const isAuthSlice = createSlice({
     name: "isAuth",
-    initialState: { isLoading: false, isAuth: false },
+    initialState: { 
+        isLoading: false, 
+        isAuth: false, 
+        errorMessage: null
+    },
     reducers: {
         setIsLoading(state) {
             state.isLoading = false
@@ -82,6 +92,9 @@ const isAuthSlice = createSlice({
         setIsAuth(state, action) {
             state.isAuth = action.payload
         },
+        setErrorMessage(state, action) {
+            state.errorMessage = action.payload
+        }
     },
     extraReducers: {
         [loginApi.pending]: (state, action) => {
@@ -89,7 +102,7 @@ const isAuthSlice = createSlice({
         },
         [loginApi.fulfilled]: (state, action) => {
             state.isLoading = false
-            state.isAuth = true
+            // state.isAuth = true
         },
         [registrationApi.pending]: (state, action) => {
             state.isLoading = true
@@ -115,6 +128,6 @@ const isAuthSlice = createSlice({
     },
 })
 
-export const { setIsAuth, setIsLoading } = isAuthSlice.actions
+export const { setIsAuth, setIsLoading, setErrorMessage } = isAuthSlice.actions
 
 export default isAuthSlice.reducer
