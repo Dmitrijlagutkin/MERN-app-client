@@ -24,6 +24,10 @@ const useStyles = makeStyles((theme) => ({
         gridTemplateColumns: "4fr 4fr 4fr",
         alignItems: "center",
     },
+    titleText: {
+        fontSize: "24px",
+        textTransform: "uppercase"
+    },
     listWrapper: {
         maxWidth: "95%",
         margin: "0 auto",
@@ -55,7 +59,7 @@ const ListsPage = () => {
         <div className={classes.root}>
             {!lists?.length ? 
                 <div className={classes.titleWrapper}>
-                    <h4>You don't have any lists yet. Start creating your lists.</h4>
+                    <h4 className={classes.titleText}>You don't have any lists yet. Start creating your lists.</h4>
                     <Button buttonText="Create your first list"
                         variant="contained"
                         color="primary"
@@ -66,7 +70,7 @@ const ListsPage = () => {
                 <div>
                     <div className={classes.topTitle}>
                         <span/>
-                        <h4>Your lists</h4>
+                        <h4 className={classes.titleText}>Your lists</h4>
                         <div className={classes.titleWrapper}>
                             <Button buttonText="Create new list"
                             variant="contained"

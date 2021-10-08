@@ -5,9 +5,8 @@ import Favorite from '@material-ui/icons/Favorite';
 import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles((theme) => ({
-    root: {
-        margin: "0 auto",
-        alignItems: "center"
+    checkBox: {
+        padding: "0" 
     },
     iconActiveColor: {
         color: "#f44336",
@@ -22,20 +21,12 @@ const useStyles = makeStyles((theme) => ({
 export default function CheckBox({onClickCheckBox}) {
     const classes = useStyles()
   
-
-//   const handleChange = (event) => {
-//     setIsFavorite(event.target.checked);
-//   };
- 
-
   return (
-    <div className={classes.root}>
         <Checkbox 
+            className={classes.checkBox}
             onClick={onClickCheckBox}
             icon={<Favorite className={classes.iconUnActiveColor} />} 
             checkedIcon={<Favorite className={classes.iconActiveColor} />} 
         />
-        <span>Mark as favorites</span>
-    </div>
   );
 }

@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit"
-import { addList } from "../services/listService"
+import { addList, update, remove } from "../services/listService"
 import { getUserData } from "./dataSlice"
 import { setIsLoading } from "./isAuthSlice"
 import { setIsActivated } from "./IsEmailActivatedSlice"
@@ -43,8 +43,55 @@ export const addNewList = createAsyncThunk(
             dispatch(getUserData(userId))
             return response.data
         } catch (e) {
-            // dispatch(setErrorMessage(e.response?.data?.message))
-            // dispatch(setIsAuth(false))
+            console.log(e.response?.data?.message)
+        }
+    }
+)
+
+export const updateList = createAsyncThunk(
+    "lists/updateList",
+    async (payload, { dispatch }) => {
+        console.log("in slice", 
+        payload.listTitle, 
+        payload.date, 
+        payload.category, 
+        payload.listItem, 
+        payload.isFavorites, 
+        payload.id)
+        try {
+            const {listTitle, 
+                date, 
+                category, 
+                listItem, 
+                isFavorites, 
+                id,
+                userId}= payload
+            const response = await update(listTitle, 
+                date, 
+                category, 
+                listItem, 
+                isFavorites,
+                id)
+            console.log(response.data)
+            dispatch(getUserData(userId))
+            return response.data
+        } catch (e) {
+            console.log(e.response?.data?.message)
+        }
+    }
+)
+
+export const deleteList = createAsyncThunk(
+    "lists/deleteList",
+    async (payload, { dispatch }) => {
+        console.log("in slice", payload.id, payload.userId)
+        try {
+            const {id, userId}= payload
+            const response = await remove(id)
+            console.log(response.data)
+            dispatch(getUserData(userId))
+            return response.data
+        } catch (e) {
             console.log(e.response?.data?.message)
         }
     }

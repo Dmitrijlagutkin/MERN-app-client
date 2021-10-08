@@ -1,9 +1,10 @@
 import {useState} from 'react';
+import {useSelector, useDispatch} from "react-redux"
+import { useHistory } from 'react-router';
 import { makeStyles } from '@material-ui/core/styles';
 import clsx from 'clsx';
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
-import CardMedia from '@material-ui/core/CardMedia';
 import CardContent from '@material-ui/core/CardContent';
 import CardActions from '@material-ui/core/CardActions';
 import Collapse from '@material-ui/core/Collapse';
@@ -15,6 +16,13 @@ import ShareIcon from '@material-ui/icons/Share';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import ChangeIsFavoriteModal from "./changeIsFavoriteModal/ChangeIsFavoriteModal"
+import Tooltip from "../../components/Tooltip"
+import Popover from '../../components/Popover.js';
+import DeleteIcon from '@material-ui/icons/Delete';
+import CreateIcon from '@material-ui/icons/Create';
+import { routeNames } from '../../constants/routeNames';
+import {updateList, deleteList} from "../../store/listsSlice"
+import { useDate } from '../../hooks/useDate';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -69,21 +77,62 @@ const useStyles = makeStyles((theme) => ({
   isFavoriteActiveColor: {
     color: "#f44336",
     marginTop: "-5px"
-},
-isFavoriteUnActiveColor: {
-    color: "rgba(0, 0, 0, 0.54)",
-    marginTop: "-5px"
-}
+  },
+  isFavoriteUnActiveColor: {
+      color: "rgba(0, 0, 0, 0.54)",
+      marginTop: "-5px"
+  },
+  popoverIconButtons: {
+    display: "block",
+    cursor: "pointer"
+  },
+  popoverIconDelete: {
+    color: "#f44336",
+    cursor: "pointer",
+    display: "block",
+    paddingBottom: "10px"
+  }
 }));
 
 const ListCard = ({listData}) => {
   const classes = useStyles();
+  const dispatch = useDispatch();
+  const history = useHistory();
+  const date = useDate()
+  const isFavorites = listData.isFavorites
+  const {user} = useSelector((state) => state?.user)
+  const userId = user?.user?.id
   const [expanded, setExpanded] = useState(false);
   const [isOpenChangeIsFavoriteModal, setIsOpenChangeIsFavoriteModal] = useState(false);
+  const [anchorElPopover, setAnchorElPopover] = useState(null);
+
+  const handleClickAnchorElPopover = (event) => {
+    setAnchorElPopover(event.currentTarget);
+  };
+
+  const handleCloseAnchorElPopover = () => {
+    setAnchorElPopover(null);
+  };
 
   const handleExpandClick = () => setExpanded(!expanded)
   const onClickOpenChangeIsFavoriteModal = () => setIsOpenChangeIsFavoriteModal(true)
   const onClickCloseChangeIsFavoriteModal = () => setIsOpenChangeIsFavoriteModal(false)
+  const onClickToUpdate = () => history.push(routeNames.ROUTE_CREATE_LIST)
+  const handleDeleteList = () => {
+    dispatch(deleteList({id: listData?._id, userId}))
+  }
+  
+  const onClickChangeIsFavorite = () => {
+    dispatch(updateList({
+        listTitle: listData.listTitle, 
+        date, 
+        category: listData.category, 
+        listItem: listData.tempListItem, 
+        isFavorites: !isFavorites,
+        id: listData._id,
+        userId
+      }))
+  }
 
   return (
     <>
@@ -96,22 +145,39 @@ const ListCard = ({listData}) => {
           }
           action={
             <IconButton aria-label="settings">
-              <MoreVertIcon />
+              <MoreVertIcon onClick={handleClickAnchorElPopover} />
+              <Popover anchorEl={anchorElPopover} 
+                onClose={handleCloseAnchorElPopover}>
+                  <div>
+                    <DeleteIcon className={classes.popoverIconDelete} 
+                      onClick={handleDeleteList}/>
+                    <CreateIcon className={classes.popoverIconButtons} 
+                      color="primary"
+                      onClick={onClickToUpdate}
+                      />
+                  </div>
+              </Popover>
             </IconButton>
           }
+          
           title={listData.listTitle}
           subheader={listData.date}
         />
+        
         <div>
           <span className={classes.category}>category</span>
           <span>{listData?.category ? listData?.category : "no category"}</span>
         </div>
         <CardActions disableSpacing>
-          <IconButton aria-label="add to favorites">
-            <FavoriteIcon className={listData.isFavorites ? classes.isFavoriteActiveColor : classes.isFavoriteUnActiveColor}
-              onClick={onClickOpenChangeIsFavoriteModal}
-            />
-          </IconButton>
+          <Tooltip title={listData.isFavorites ? "Remove from favorites" : "Add to favourites"}
+              placement="bottom"
+              arrow={true}>
+            <IconButton aria-label="add to favorites">
+              <FavoriteIcon className={listData.isFavorites ? classes.isFavoriteActiveColor : classes.isFavoriteUnActiveColor}
+                onClick={onClickChangeIsFavorite}
+              />
+            </IconButton>
+          </Tooltip>
           <IconButton aria-label="share">
             <ShareIcon />
           </IconButton> 
@@ -141,10 +207,12 @@ const ListCard = ({listData}) => {
         </Collapse>
         
       </Card>
-      <ChangeIsFavoriteModal open={isOpenChangeIsFavoriteModal} 
+      {/* <ChangeIsFavoriteModal open={isOpenChangeIsFavoriteModal} 
         onClickClose={onClickCloseChangeIsFavoriteModal}
         listData={listData}
-      />
+        userId={user?.user?.id}
+      /> */}
+      
     </>
   );
 }
