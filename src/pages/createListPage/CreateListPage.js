@@ -11,7 +11,7 @@ import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import CheckIcon from '@material-ui/icons/Check';
 import CreateIcon from '@material-ui/icons/Create';
 import {useDate} from "../../hooks/useDate"
-import { routeNames } from "../../constants/routeNames";
+import { ROUTE_MAIN } from "../../constants";
 import Select from "../../components/Select"
 import ListItem from "./CreateListItem"
 import {setTempListItem} from "../../store/listsSlice"
@@ -134,7 +134,7 @@ const CreateListPage = () => {
                 listItem: tempListItem, 
                 isFavorites: isFavorite,
                 userId: user?.user?.id}))
-            history.push(routeNames.ROUTE_MAIN)
+            history.push(ROUTE_MAIN)
         }
     }
     const onClickGoBack = () => history.goBack()

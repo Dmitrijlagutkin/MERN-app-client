@@ -6,7 +6,7 @@ import Button from "./Button"
 import IconButton from "@material-ui/core/IconButton"
 import MenuIcon from "@material-ui/icons/Menu"
 import {logoutApi} from "../store/isAuthSlice"
-import {routeNames} from "../constants/routeNames"
+import {ROUTE_MAIN, ROUTE_LOGIN} from "../constants"
 import Loader from "./Loader"
 import Input from "./Input"
 
@@ -56,10 +56,10 @@ const ButtonAppBar = ({ onClickOpenMenu }) => {
     const [searchText, setSearchText] = useState('')
 
     const onClickLogout = () => {
-        history.push(routeNames.ROUTE_MAIN)
+        history.push(ROUTE_MAIN)
         dispatch(logoutApi())
     }
-    const onClictToLoginPage = () => history.push(routeNames.ROUTE_LOGIN)
+    const onClictToLoginPage = () => history.push(ROUTE_LOGIN)
     const onChangeSearchText = (e) => setSearchText(e.target.value)
 
     return (

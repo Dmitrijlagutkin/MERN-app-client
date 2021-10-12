@@ -15,12 +15,12 @@ import FavoriteIcon from '@material-ui/icons/Favorite';
 import ShareIcon from '@material-ui/icons/Share';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
-import ChangeIsFavoriteModal from "./changeIsFavoriteModal/ChangeIsFavoriteModal"
+import ShareModal from "./shareModal/ShareModal"
 import Tooltip from "../../components/Tooltip"
 import Popover from '../../components/Popover.js';
 import DeleteIcon from '@material-ui/icons/Delete';
 import CreateIcon from '@material-ui/icons/Create';
-import { routeNames } from '../../constants/routeNames';
+import { ROUTE_CREATE_LIST } from '../../constants';
 import {updateList, deleteList} from "../../store/listsSlice"
 import { useDate } from '../../hooks/useDate';
 
@@ -103,7 +103,7 @@ const ListCard = ({listData}) => {
   const {user} = useSelector((state) => state?.user)
   const userId = user?.user?.id
   const [expanded, setExpanded] = useState(false);
-  const [isOpenChangeIsFavoriteModal, setIsOpenChangeIsFavoriteModal] = useState(false);
+  const [isOpenShareModal, setIsOpenShareModal] = useState(false);
   const [anchorElPopover, setAnchorElPopover] = useState(null);
 
   const handleClickAnchorElPopover = (event) => {
@@ -115,9 +115,9 @@ const ListCard = ({listData}) => {
   };
 
   const handleExpandClick = () => setExpanded(!expanded)
-  const onClickOpenChangeIsFavoriteModal = () => setIsOpenChangeIsFavoriteModal(true)
-  const onClickCloseChangeIsFavoriteModal = () => setIsOpenChangeIsFavoriteModal(false)
-  const onClickToUpdate = () => history.push(routeNames.ROUTE_CREATE_LIST)
+  const onClickOpenShareModal = () => setIsOpenShareModal(true)
+  const onClickCloseShareModal = () => setIsOpenShareModal(false)
+  const onClickToUpdate = () => history.push(ROUTE_CREATE_LIST)
   const handleDeleteList = () => {
     dispatch(deleteList({id: listData?._id, userId}))
   }
@@ -179,7 +179,11 @@ const ListCard = ({listData}) => {
             </IconButton>
           </Tooltip>
           <IconButton aria-label="share">
-            <ShareIcon />
+            <ShareIcon onClick={onClickOpenShareModal}/>
+            <ShareModal open={isOpenShareModal} 
+              onClickClose={onClickCloseShareModal}
+              listData={listData}
+            />
           </IconButton> 
           <IconButton
             className={clsx(classes.expand, {
@@ -207,12 +211,6 @@ const ListCard = ({listData}) => {
         </Collapse>
         
       </Card>
-      {/* <ChangeIsFavoriteModal open={isOpenChangeIsFavoriteModal} 
-        onClickClose={onClickCloseChangeIsFavoriteModal}
-        listData={listData}
-        userId={user?.user?.id}
-      /> */}
-      
     </>
   );
 }

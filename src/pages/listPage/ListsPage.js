@@ -3,10 +3,11 @@ import {useSelector, useDispatch} from "react-redux"
 import {useHistory} from "react-router-dom"
 import { makeStyles } from '@material-ui/styles';
 import Button from "../../components/Button";
-import {routeNames} from "../../constants/routeNames"
+import {ROUTE_CREATE_LIST} from "../../constants"
 import ListCard from "./ListCard"
 import LibraryAddIcon from '@material-ui/icons/LibraryAdd';
 import Tooltip from "../../components/Tooltip"
+import ShareWithFriends from "../sharePage/ShareWithFriends"
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -51,12 +52,13 @@ const ListsPage = () => {
     const {lists} = useSelector((state) => state?.lists)
     const [searchText, setSearchText] = useState('')
 
-    const onClickToCreateList = () => history.push(routeNames.ROUTE_CREATE_LIST)
+    const onClickToCreateList = () => history.push(ROUTE_CREATE_LIST)
     const onChangeSearchText = (e) => setSearchText(e.target.value)
     console.log(searchText)
 
     return (
         <div className={classes.root}>
+            <ShareWithFriends/>
             {!lists?.length ? 
                 <div className={classes.titleWrapper}>
                     <h4 className={classes.titleText}>You don't have any lists yet. Start creating your lists.</h4>

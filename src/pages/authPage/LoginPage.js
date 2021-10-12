@@ -7,7 +7,7 @@ import Input from "../../components/Input"
 import Button from "../../components/Button"
 import { validateEmail } from "../../halpers/validation"
 import { makeStyles } from '@material-ui/core/styles';
-import {routeNames} from "../../constants/routeNames"
+import {ROUTE_MAIN} from "../../constants"
 import VisibilityOffIcon from '@material-ui/icons/VisibilityOff';
 import VisibilityIcon from '@material-ui/icons/Visibility';
 import Tooltip from "../../components/Tooltip"
@@ -83,7 +83,7 @@ const LoginPage = () => {
     useEffect(() => {
         if (user) {
             dispatch(getUserData(user.user.id))
-            history.push(routeNames.ROUTE_MAIN)
+            history.push(ROUTE_MAIN)
         }
     }, [user])
 

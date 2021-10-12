@@ -2,27 +2,31 @@ import PageNotFound from "./pages/pageNotFound/PageNotFound"
 import ListsPage from "./pages/listPage/ListsPage"
 import LoginPage from "./pages/authPage/LoginPage"
 import CreateListPage from "./pages/createListPage/CreateListPage"
-import { routeNames } from "./constants/routeNames"
+import { ROUTE_PAGE_NOT_FOUND, 
+	ROUTE_MAIN, 
+	ROUTE_LOGIN, 
+	ROUTE_CREATE_LIST 
+} from "./constants"
 
 const routes = [
 	{
 		exact: true,
-		path: routeNames.ROUTE_PAGE_NOT_FOUND,
+		path: ROUTE_PAGE_NOT_FOUND,
 		component: PageNotFound
 	},
     {
 		exact: true,
-		path: routeNames.ROUTE_MAIN,
+		path: ROUTE_MAIN,
 		component: ListsPage
 	},
     {
         exact: true,
-		path: routeNames.ROUTE_LOGIN,
+		path: ROUTE_LOGIN,
 		component: LoginPage
     },
 	{
         exact: true,
-		path: routeNames.ROUTE_CREATE_LIST,
+		path: ROUTE_CREATE_LIST,
 		component: CreateListPage
     }
 ]

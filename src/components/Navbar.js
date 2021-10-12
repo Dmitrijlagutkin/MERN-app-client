@@ -1,4 +1,5 @@
 import React, { useState } from "react"
+import {useSelector} from 'react-redux'
 import { makeStyles } from "@material-ui/core/styles"
 import SwipeableDrawer from "@material-ui/core/SwipeableDrawer"
 import List from "@material-ui/core/List"
@@ -7,6 +8,10 @@ import ListItemText from "@material-ui/core/ListItemText"
 import { NavLink } from "react-router-dom"
 import CloseIcon from "@material-ui/icons/Close"
 import AppBar from "./Appbar"
+import { ROUTE_MAIN, 
+    ROUTE_CREATE_LIST, 
+    ROUTE_LOGIN 
+} from "../constants"
 
 const useStyles = makeStyles({
     list: {
@@ -25,6 +30,7 @@ const useStyles = makeStyles({
 
 export default function SwipeableTemporaryDrawer() {
     const classes = useStyles()
+    const {isAuth} = useSelector((state) => state?.isAuth)
     const [state, setState] = useState({
         left: false,
     })
@@ -40,13 +46,21 @@ export default function SwipeableTemporaryDrawer() {
             <div className={classes.closeButton} onClick={toggleDrawer}>
                 <CloseIcon color='primary' />
             </div>
-
             <List className={classes.list}>
-                {["auth", "lists", "Send email", "Drafts"].map((text) => (
-                    <NavLink to={text} button key={text}>
-                        <ListItemText primary={text} onClick={toggleDrawer} />
+                {isAuth ?
+                    <>
+                        <NavLink to={ROUTE_MAIN} button key={ROUTE_MAIN}>
+                            <ListItemText primary="Home" onClick={toggleDrawer} />
+                        </NavLink>
+                        <NavLink to={ROUTE_CREATE_LIST} button key={ROUTE_CREATE_LIST}>
+                            <ListItemText primary="Create list" onClick={toggleDrawer} />
+                        </NavLink>
+                    </>
+                    : 
+                    <NavLink to={ROUTE_LOGIN} button key={ROUTE_LOGIN}>
+                        <ListItemText primary="Login" onClick={toggleDrawer} />
                     </NavLink>
-                ))}
+                }
             </List>
             <Divider />
         </div>
