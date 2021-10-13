@@ -58,7 +58,7 @@ const ListsPage = () => {
 
     return (
         <div className={classes.root}>
-            <ShareWithFriends/>
+            {/* <ShareWithFriends/> */}
             {!lists?.length ? 
                 <div className={classes.titleWrapper}>
                     <h4 className={classes.titleText}>You don't have any lists yet. Start creating your lists.</h4>
